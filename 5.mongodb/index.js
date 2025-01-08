@@ -12,11 +12,22 @@ const { MongoClient } = require('mongodb')
 const url = 'mongodb://127.0.0.1:27017'
 const client = new MongoClient(url) 
 
-const main = async () => {
+const clientFun = async c => {
   await client.connect()
   const db = client.db('mytest')
-  const cc = db.collection('cc')
-  const res = await cc.find()
+  return db.collection(c)
+}
+
+const main = async () => {
+  const c = await clientFun('cc')
+  
+  // const res = await c.insertOne({ x: 4, y: 10})
+  // console.log(res)
+  // const updateRes = await c.updateOne({ x: {$gt: 2 }}, {$set: {x: 9}})
+  // console.log(updateRes)
+  const delRes = await c.deleteOne({x: {$gt: 3}})
+  console.log(delRes)
+  const res = await c.find()
   console.log(await res.toArray())
 }
 
